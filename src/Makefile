@@ -5,7 +5,7 @@ COPTIMIZATION = -O4
 WARNINGOFF = -w
 PROG = ../bin/volumeRendering
 
-SRC = main.cpp core.cpp GlutWindow.cpp ultrasound.cpp ArcBall.cpp TransferFunction.cpp Trapez.cpp mathutil/CMatrix.cpp mathutil/CPosition.cpp mathutil/CQuaternion.cpp mathutil/CVector.cpp
+SRC = main.cpp core.cpp GlutWindow.cpp BraTrackUDP.cpp ultrasound.cpp ArcBall.cpp TransferFunction.cpp Trapez.cpp mathutil/CMatrix.cpp mathutil/CPosition.cpp mathutil/CQuaternion.cpp mathutil/CVector.cpp
 OPENGL = -lglut -lGL -lGLU -lGL
 OPENCV = `pkg-config opencv --libs --cflags`
 CG = -lCg -lCgGL

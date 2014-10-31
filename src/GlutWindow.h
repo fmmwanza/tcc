@@ -11,6 +11,7 @@
 
 #include <cstdlib>
 #include <cstdio>
+#include <iostream>
 #include "utils.h"
 #include <assert.h>
 
@@ -82,7 +83,9 @@ protected:
 	int m_nMouseState;
 	int m_nInteractionMode;
 	float v_plano[4];
+
 	int mainScreen;
+	void drawTransducer();
 
 	void initializeAppParameters();
 	void initializeGL();

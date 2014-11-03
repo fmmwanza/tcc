@@ -22,7 +22,9 @@ unsigned int BUFFER_SIZE = 1024;
 BraTrackUDP::classInputProtocol udpReceiver;
 vector<type_artifact> list_of_artifacts;
 
-float tr = 0;
+float trx = -1;
+float xx,yy,zz;
+
 
 static void handleCgError() 
 {
@@ -50,6 +52,7 @@ CGlutWindow::CGlutWindow(DATAINFO dInfo)
 	mainScreen = glutCreateWindow ("Volume Rendering");
 
 	std::fill_n(v_plano, 4, 0.0);
+	xx = 0;yy=0;zz=0;
 
 	m_dFieldOfView = 30.0;
 	m_nWidth = 1;
@@ -163,19 +166,35 @@ void CGlutWindow::resize(int width, int height) {
 void CGlutWindow::keyEvent(unsigned char key,int x,int y)
 {
 	switch (key) {
-		case 'g':
+		case 'j'://right
 			{
-				tr += 1;
+				trx++;
+			
 				
 			}
 			break;
-		case 'h' :
+		case 'l' ://left
 			{
-				tr -= 1;
+				trx--;
+			
 			
 			}
 			break;
-			case 's':
+		case 'i'://right
+			{
+				xx++;yy+=0.1;zz++;
+			
+				
+			}
+			break;
+		case 'k' ://left
+			{
+				xx--;yy-=0.1;zz--;
+			
+			
+			}
+			break;
+		case 's':
 			{
 				v_plano[0] += 1;
 				
@@ -211,11 +230,11 @@ void CGlutWindow::keyEvent(unsigned char key,int x,int y)
 				
 			}
 			break;
-		case 'l':
-			{
-				m_nInteractionMode = MOVE_LIGHT;
-			}
-			break;
+		// case 'l':
+		// 	{
+		// 		m_nInteractionMode = MOVE_LIGHT;
+		// 	}
+		// 	break;
 		case 'm':
 			{
 				m_nMode++;
@@ -406,15 +425,13 @@ void CGlutWindow::mouseMoveEvent(int x,int y){
 
 void CGlutWindow::idle(){
 
-	unsigned long long int time_stamp;
-	try{
-		udpReceiver.receive_frame_not_blocking(time_stamp,list_of_artifacts);
-	}
-	catch(...){
-		cout << "error" << std::endl;
-	}
-	glutPostRedisplay();
-
+	// unsigned long long int time_stamp;
+	// try{
+	// 	udpReceiver.receive_frame_not_blocking(time_stamp,list_of_artifacts);
+	// }
+	// catch(...){
+	// 	cout << "error" << std::endl;
+	// }
 	glutPostRedisplay();
 }
 
@@ -495,7 +512,7 @@ void CGlutWindow::drawTransducer(){
 	//glLoadIdentity();
 
 	glColor3d(0.5,1.0,0.8);
-	glLineWidth(4.0);
+	//glLineWidth(4.0);
 	double transform[16];
 	for(unsigned int i=0; i<list_of_artifacts.size(); i++){
 		type_artifact & temp = list_of_artifacts[i];
@@ -512,41 +529,35 @@ void CGlutWindow::drawTransducer(){
 		transform[9] = temp.transform[7];
 		transform[10] = temp.transform[8];
 		transform[11] = 0.0;
-		transform[12] = 0.0;//temp.transform[9];
-		transform[13] = 0.0;//temp.transform[10];
-		transform[14] = 0.0;//temp.transform[11];
+		transform[12] = temp.transform[9];
+		transform[13] = temp.transform[10];
+		transform[14] = temp.transform[11];
 		transform[15] = 1.0;
 		
 		glPushMatrix();
 		glTranslated(0.0,1.0,0.0);
-		glMultMatrixd(transform);
+		//glMultMatrixd(transform);
 
 		glBegin(GL_LINES);
 		glColor3d(1.0,0.0,0.0);
-		glVertex3d(0.0,0.0,0.0);
-		glVertex3d(0.5,0.0,0.0);
+		glVertex3f(0.0,0.0,0.0);
+		glVertex3f(0.0,0.5,0.0);
+
+		glColor3d(1.0,0.0,0.0);
+		glVertex3f(0.0,0.0,0.0);
+		glVertex3f(0.0,-1.0,0.0);
 
 		glColor3d(0.0,1.0,0.0);
-		glVertex3d(0.0,0.0,0.0);
-		glVertex3d(0.0,0.5,0.0);
+		glVertex3f(0.0,0.0,0.0);
+		glVertex3f(0.0,0.3,0.3);
 
 		glColor3d(0.0,0.0,1.0);
 		glVertex3d(0.0,0.0,0.0);
-		glVertex3d(0.0,0.0,0.5);
+		glVertex3d(0.0,0.3,-0.3);
 		glEnd();
 		glPopMatrix();
 	}
-	// glutSwapBuffers();
-	// glColor3d(1,1,1);
-	// glBegin(GL_LINES);
-	// glVertex3d(0.0,0.0,0.0);
-	// glVertex3d(500.0,0.0,0.0);
-	// glVertex3d(0.0,500.0,0.0);
-	// glVertex3d(0.0,0.0,500.0);
-	// glEnd();
-	cout<<tr<<endl;
 	
-
 }
 
 bool CGlutWindow::loadTextures() {
@@ -590,7 +601,13 @@ void CGlutWindow::renderGeometry() {
 
     // Now make sure that the vertex and fragment programs, loaded
     // in LoadCgPrograms() are bound.
+
+	glPushMatrix();
+	glRotated(90,trx,0,0);
+	
 	cgRenderGeometry();
+	glPopMatrix();
+	drawTransducer();
 
 }
 
@@ -666,25 +683,26 @@ void CGlutWindow::cgRenderGeometry() {
 	glEnd();
 	
  	glLineWidth(2.0);
-// 	glBegin(GL_LINES);
-// 	{
-// #ifndef COLOR_CODE_EDGES
+ 	glBegin(GL_LINES);
+ 	{
+ #ifndef COLOR_CODE_EDGES
 		glColor3f(1.0,1.0,1.0);
-// #endif
+ #endif
 		
-// 		for(int i = 0; i < 12; i++) {
-// #ifdef COLOR_CODE_EDGES
-// 			glColor3dv(colors[i]);
-// #endif
-// 			glVertex4dv(&(m_pVertices[m_pEdges[m_pEdgeList[nMaxIdx][i]].nV1])[0]);
-// 			glVertex4dv(&(m_pVertices[m_pEdges[m_pEdgeList[nMaxIdx][i]].nV2])[0]);
-// 		}
+ 		for(int i = 0; i < 12; i++) {
+ #ifdef COLOR_CODE_EDGES
+ 			glColor3dv(colors[i]);
+ #endif
+ 			glVertex4dv(&(m_pVertices[m_pEdges[m_pEdgeList[nMaxIdx][i]].nV1])[0]);
+ 			glVertex4dv(&(m_pVertices[m_pEdges[m_pEdgeList[nMaxIdx][i]].nV2])[0]);
+ 		}
 
-// 	}
-// 	glEnd();
+ 	}
+ 	glEnd();
 
-
-	drawTransducer();
+ 	//glPushMatrix();
+	//drawTransducer();
+	//glPopMatrix();
 	
 	CGprofile vertProfile = s_vertexProfile;
 	CGprofile fragProfile = s_fragmentProfile;
@@ -730,7 +748,7 @@ void CGlutWindow::cgRenderGeometry() {
 			fragProg = m_pFragmentPrograms[3];
 			cgGLSetParameter4dv(cgGetNamedParameter(fragProg,"plano"),&(plano[0]));
 			//cgGLSetParameter1d(cgGetNamedParameter(fragProg,"side"),m_changeVolumeSide);
-			cgGLSetParameter1d(cgGetNamedParameter(fragProg,"side"),2);//3
+			cgGLSetParameter1d(cgGetNamedParameter(fragProg,"side"),3);//2
 			cgGLSetStateMatrixParameter(cgGetNamedParameter(fragProg, "ModelView"),
                                 CG_GL_MODELVIEW_MATRIX, CG_GL_MATRIX_IDENTITY);			
 			break;
@@ -747,7 +765,6 @@ void CGlutWindow::cgRenderGeometry() {
 
 	cgGLSetTextureParameter(   cgGetNamedParameter(fragProg,"volume"),m_pTextureIds[0]);
 	cgGLEnableTextureParameter(cgGetNamedParameter(fragProg,"volume"));
-
 
 	m_pTransferFunction->activate(fragProg);
 	

@@ -166,14 +166,14 @@ void CGlutWindow::resize(int width, int height) {
 void CGlutWindow::keyEvent(unsigned char key,int x,int y)
 {
 	switch (key) {
-		case 'j'://right
+		case 'j':// rotate volume, +90°
 			{
 				trx++;
 			
 				
 			}
 			break;
-		case 'l' ://left
+		case 'l' ://rotate volume, -90°
 			{
 				trx--;
 			
@@ -194,18 +194,18 @@ void CGlutWindow::keyEvent(unsigned char key,int x,int y)
 			
 			}
 			break;
-		case 's':
-			{
-				v_plano[0] += 1;
+		// case 's':
+		// 	{
+		// 		v_plano[0] += 1;
 				
-			}
-			break;
-		case 'x' :
-			{
-				v_plano[0] -= 1;
+		// 	}
+		// 	break;
+		// case 'x' :
+		// 	{
+		// 		v_plano[0] -= 1;
 			
-			}
-			break;
+		// 	}
+		// 	break;
 		case 'a':
 			{
 				v_plano[1] += 1;
@@ -425,13 +425,13 @@ void CGlutWindow::mouseMoveEvent(int x,int y){
 
 void CGlutWindow::idle(){
 
-	// unsigned long long int time_stamp;
-	// try{
-	// 	udpReceiver.receive_frame_not_blocking(time_stamp,list_of_artifacts);
-	// }
-	// catch(...){
-	// 	cout << "error" << std::endl;
-	// }
+	unsigned long long int time_stamp;
+	try{
+		udpReceiver.receive_frame_not_blocking(time_stamp,list_of_artifacts);
+	}
+	catch(...){
+		cout << "error" << std::endl;
+	}
 	glutPostRedisplay();
 }
 
@@ -512,9 +512,10 @@ void CGlutWindow::drawTransducer(){
 	//glLoadIdentity();
 
 	glColor3d(0.5,1.0,0.8);
-	//glLineWidth(4.0);
+	glLineWidth(4.0);
 	double transform[16];
-	for(unsigned int i=0; i<list_of_artifacts.size(); i++){
+	int i=0;
+	//for(unsigned int i=0; i<list_of_artifacts.size(); i++){
 		type_artifact & temp = list_of_artifacts[i];
 		//std::cout << temp.id << std::endl;
 		transform[0] = temp.transform[0];
@@ -535,17 +536,13 @@ void CGlutWindow::drawTransducer(){
 		transform[15] = 1.0;
 		
 		glPushMatrix();
-		glTranslated(0.0,1.0,0.0);
-		//glMultMatrixd(transform);
+		glTranslated(-680,-1146,-302);
+		glMultMatrixd(transform);
 
 		glBegin(GL_LINES);
 		glColor3d(1.0,0.0,0.0);
 		glVertex3f(0.0,0.0,0.0);
 		glVertex3f(0.0,0.5,0.0);
-
-		glColor3d(1.0,0.0,0.0);
-		glVertex3f(0.0,0.0,0.0);
-		glVertex3f(0.0,-1.0,0.0);
 
 		glColor3d(0.0,1.0,0.0);
 		glVertex3f(0.0,0.0,0.0);
@@ -555,8 +552,19 @@ void CGlutWindow::drawTransducer(){
 		glVertex3d(0.0,0.0,0.0);
 		glVertex3d(0.0,0.3,-0.3);
 		glEnd();
+
+		glBegin(GL_TRIANGLES);
+			glColor3d(1.0,1.0,1.0);
+		    glVertex3f(0.0, 0.0, 0.0);
+		    glVertex3f( 0.0, -1.5, -2.0);   
+		    glVertex3f( 0.0f,-1.5, 2.0);
+		glEnd();
+
 		glPopMatrix();
-	}
+		
+		v_plano[0] = transform[12];
+		printf("%f - %f -- %f - %f\n", transform[12],transform[13], transform[14], list_of_artifacts.size());
+	//}
 	
 }
 
@@ -603,7 +611,7 @@ void CGlutWindow::renderGeometry() {
     // in LoadCgPrograms() are bound.
 
 	glPushMatrix();
-	glRotated(90,trx,0,0);
+	glRotated(90,trx,0,0); //rotate volume
 	
 	cgRenderGeometry();
 	glPopMatrix();

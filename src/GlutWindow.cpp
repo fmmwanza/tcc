@@ -24,6 +24,9 @@ vector<type_artifact> list_of_artifacts;
 
 float trx = -1;
 float xx,yy,zz;
+float rotx;
+int firstIgnore;
+
 
 
 static void handleCgError() 
@@ -53,6 +56,9 @@ CGlutWindow::CGlutWindow(DATAINFO dInfo)
 
 	std::fill_n(v_plano, 4, 0.0);
 	xx = 0;yy=0;zz=0;
+	rotx =0;
+	rotxUltrasound = 0;
+	firstIgnore = 0;
 
 	m_dFieldOfView = 30.0;
 	m_nWidth = 1;
@@ -168,14 +174,14 @@ void CGlutWindow::keyEvent(unsigned char key,int x,int y)
 	switch (key) {
 		case 'j':// rotate volume, +90°
 			{
-				trx++;
+				xx+=0.01;
 			
 				
 			}
 			break;
 		case 'l' ://rotate volume, -90°
 			{
-				trx--;
+				xx-=0.01;
 			
 			
 			}
@@ -194,18 +200,18 @@ void CGlutWindow::keyEvent(unsigned char key,int x,int y)
 			
 			}
 			break;
-		// case 's':
-		// 	{
-		// 		v_plano[0] += 1;
+		case 's':
+			{
+				v_plano[0] += 1;
 				
-		// 	}
-		// 	break;
-		// case 'x' :
-		// 	{
-		// 		v_plano[0] -= 1;
+			}
+			break;
+		case 'x' :
+			{
+				v_plano[0] -= 1;
 			
-		// 	}
-		// 	break;
+			}
+			break;
 		case 'a':
 			{
 				v_plano[1] += 1;
@@ -510,7 +516,7 @@ void CGlutWindow::drawTransducer(){
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//glMatrixMode(GL_MODELVIEW);
 	//glLoadIdentity();
-
+	firstIgnore++;
 	glColor3d(0.5,1.0,0.8);
 	glLineWidth(4.0);
 	double transform[16];
@@ -518,25 +524,46 @@ void CGlutWindow::drawTransducer(){
 	//for(unsigned int i=0; i<list_of_artifacts.size(); i++){
 		type_artifact & temp = list_of_artifacts[i];
 		//std::cout << temp.id << std::endl;
-		transform[0] = temp.transform[0];
-		transform[1] = temp.transform[1];
-		transform[2] = temp.transform[2];
+		transform[0] = 0;//temp.transform[0];
+		transform[1] = 0;//temp.transform[1];
+		transform[2] = 0;//temp.transform[2];
 		transform[3] = 0.0;
-		transform[4] = temp.transform[3];
+		transform[4] = 0;//temp.transform[3];
 		transform[5] = temp.transform[4];
 		transform[6] = temp.transform[5];
 		transform[7] = 0.0;
-		transform[8] = temp.transform[6];
+		transform[8] = 0;//temp.transform[6];
 		transform[9] = temp.transform[7];
 		transform[10] = temp.transform[8];
 		transform[11] = 0.0;
-		transform[12] = temp.transform[9];
-		transform[13] = temp.transform[10];
-		transform[14] = temp.transform[11];
+
+		if(firstIgnore > 1){
+			if(rotx == 0)
+				rotx = temp.transform[9];
+			if(temp.transform[9] < rotx)
+				xx-=0.5;
+			else if(temp.transform[9] > rotx)
+				xx+=0.5;
+
+			if(abs((long long int)(684 - temp.transform[9])) < (m_datasetInfo.resWidth/2)){
+				xx = (684 - temp.transform[9]);
+				rotxUltrasound =(int)(m_datasetInfo.resWidth/2) + xx;
+			}
+			else{
+				rotxUltrasound =(int)(m_datasetInfo.resWidth/2) + xx;
+			}
+		}	
+		rotx = temp.transform[9];
+		firstIgnore++;
+		transform[12] = temp.transform[9]*0.01;
+		transform[13] = yy;//temp.transform[10];
+		transform[14] = zz;//temp.transform[11];
 		transform[15] = 1.0;
 		
 		glPushMatrix();
-		glTranslated(-680,-1146,-302);
+		//glTranslated(-6.83,-1146,-302);
+		glTranslated(-6.83,1,0);
+		glRotated(120,1,0,0);
 		glMultMatrixd(transform);
 
 		glBegin(GL_LINES);
@@ -556,14 +583,14 @@ void CGlutWindow::drawTransducer(){
 		glBegin(GL_TRIANGLES);
 			glColor3d(1.0,1.0,1.0);
 		    glVertex3f(0.0, 0.0, 0.0);
-		    glVertex3f( 0.0, -1.5, -2.0);   
-		    glVertex3f( 0.0f,-1.5, 2.0);
+		    glVertex3f( 0.0, -2.3,-1.5);   
+		    glVertex3f( 0.0f,-2.0,1.5);
 		glEnd();
 
 		glPopMatrix();
 		
-		v_plano[0] = transform[12];
-		printf("%f - %f -- %f - %f\n", transform[12],transform[13], transform[14], list_of_artifacts.size());
+		//v_plano[0] = transform[12];
+		printf("%i -- %f - %f -- %f - %f\n",rotxUltrasound, rotx,684 - temp.transform[9], transform[14], list_of_artifacts.size());
 	//}
 	
 }

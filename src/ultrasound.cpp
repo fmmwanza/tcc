@@ -18,9 +18,9 @@ Ultrasound::Ultrasound(int width, int height, int depth, char *filename){
 	widthIn = width;
 	heightIn = height;
 	depthIn = depth;
-	p1X = (int)widthIn/2;
-	p2X = (int)widthIn/2;
-	p3X = (int)widthIn/2;
+	p1X =0;// (int)widthIn/2;
+	p2X = 0;//(int)widthIn/2;
+	p3X = 0;//(int)widthIn/2;
 
 	p1Z = 0.0;
 	p1Y = 0.0;
@@ -54,6 +54,12 @@ void Ultrasound::applyTexture(unsigned char *pVolume){
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE,widthIn,heightIn, 0,GL_LUMINANCE, GL_UNSIGNED_SHORT,pVolume);
 	
+}
+
+void Ultrasound::updateFromBratrack(int x){
+
+			p1X=x;p2X=x;p3X=x;
+			getSlice();
 }
 
 void Ultrasound::getSlice(){
@@ -175,14 +181,14 @@ void Ultrasound::keyEvent(char key){
 			/*p1X+=0.5;*/p2X+=0.2;p3X-=0.5;
 			getSlice();
 		break;
-		case 's':// z face up
-			p1X-=0.5;p2X-=0.5;p3X-=0.5;
-			getSlice();
-		break;
-		case 'x':// z face back
-			p1X+=0.5;p2X+=0.5;p3X+=0.5;
-			getSlice();
-		break;
+		// case 's':// z face up
+		// 	p1X-=0.5;p2X-=0.5;p3X-=0.5;
+		// 	getSlice();
+		// break;
+		// case 'x':// z face back
+		// 	p1X+=0.5;p2X+=0.5;p3X+=0.5;
+		// 	getSlice();
+		// break;
 	}
 	glutPostRedisplay();
 }

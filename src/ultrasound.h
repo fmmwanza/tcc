@@ -34,6 +34,7 @@ public:
 	void loadTexture(char *filename);
 	void keyEvent(char key);
 	void setScreen();
+	void updateFromBratrack(int x);
     unsigned char ***volumeMatrix3D;
 	GLuint textura;
 	float p1X,p1Y,p1Z,p2X,p2Y,p2Z,p3X,p3Y,p3Z;

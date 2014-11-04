@@ -37,6 +37,7 @@ public:
 		KBUTTON_SHIFT  = 0x10
 	};
 
+	int rotxUltrasound;
 	virtual void cgRenderGeometry();
 
 	void renderFrame();
@@ -83,6 +84,7 @@ protected:
 	int m_nMouseState;
 	int m_nInteractionMode;
 	float v_plano[4];
+
 
 	int mainScreen;
 	void drawTransducer();

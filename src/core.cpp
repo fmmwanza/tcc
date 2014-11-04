@@ -49,9 +49,13 @@ void Core::display(void)
 
 	c_pMainWindow->renderFrame();
 	fpsCurrent++;
+	secondWindow->updateFromBratrack(c_pMainWindow->rotxUltrasound);
 	secondWindow->setScreen();
 	secondWindow->getSlice();
 	secondWindow->display();
+
+	//cout<<c_pMainWindow->rotxUltrasound<<endl;
+	//
 	c_pMainWindow->setScreen();
 }
 

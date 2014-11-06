@@ -38,6 +38,7 @@ public:
 	};
 
 	int rotxUltrasound;
+	float initialPosBratrack;
 	virtual void cgRenderGeometry();
 
 	void renderFrame();
@@ -84,6 +85,7 @@ protected:
 	int m_nMouseState;
 	int m_nInteractionMode;
 	float v_plano[4];
+
 
 
 	int mainScreen;

@@ -115,7 +115,7 @@ void Ultrasound::display(){
 
 	// Calculate The Aspect Ratio Of The Window
 	gluPerspective(20.0f,1.0,0.3f,200.0f);//(GLfloat)640/(GLfloat)480
-	gluLookAt(0,0,5, 0.5,0.5,0, 0,1,0);
+	gluLookAt(0,0,5, 0.8,1.0,0, 0,1,0);
 
     glEnable(GL_TEXTURE_2D);
    
@@ -123,9 +123,9 @@ void Ultrasound::display(){
 
     glBegin(GL_QUADS);
 		glTexCoord2f(0.0, 0.0); glVertex2f(0.0, 0.0); 
-		glTexCoord2f(0.0, 0.5); glVertex2f(0.0, 1.0); 
-		glTexCoord2f(0.5, 0.5); glVertex2f(1.0, 1.0); 
-		glTexCoord2f(0.5, 0.0); glVertex2f(1.0, 0.0);
+		glTexCoord2f(0.0, 0.5); glVertex2f(0.0, 1.5); 
+		glTexCoord2f(0.5, 0.5); glVertex2f(1.5, 1.5); 
+		glTexCoord2f(0.5, 0.0); glVertex2f(1.5, 0.0);
 	glEnd();
 	glFlush();
  	glutSwapBuffers();

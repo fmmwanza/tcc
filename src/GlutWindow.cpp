@@ -85,8 +85,8 @@ CGlutWindow::CGlutWindow(DATAINFO dInfo)
 	udpReceiver.set_package_limits(4); //maximum number of artifacts
 	type_artifact art1;
 	art1.id = "1";
-	
 	list_of_artifacts.push_back(art1);
+	initialPosBratrack =0;
 
 	initializeAppParameters();
 	initializeGL();
@@ -538,19 +538,21 @@ void CGlutWindow::drawTransducer(){
 		transform[11] = 0.0;
 
 		if(firstIgnore > 1){
-			if(rotx == 0)
+			if(rotx == 0){
 				rotx = temp.transform[9];
+				initialPosBratrack = temp.transform[9];
+			}
 			if(temp.transform[9] < rotx)
-				xx-=0.5;
-			else if(temp.transform[9] > rotx)
 				xx+=0.5;
+			else if(temp.transform[9] > rotx)
+				xx-=0.5;
 
-			if(abs((long long int)(684 - temp.transform[9])) < (m_datasetInfo.resWidth/2)){
-				xx = (684 - temp.transform[9]);
-				rotxUltrasound =(int)(m_datasetInfo.resWidth/2) + xx;
+			if(abs((long long int)(initialPosBratrack - temp.transform[9])) < (m_datasetInfo.resWidth/2)){
+				xx = (initialPosBratrack - temp.transform[9]);
+				rotxUltrasound =(int)(m_datasetInfo.resWidth/2) - xx;
 			}
 			else{
-				rotxUltrasound =(int)(m_datasetInfo.resWidth/2) + xx;
+				rotxUltrasound =(int)(m_datasetInfo.resWidth/2) - xx;
 			}
 		}	
 		rotx = temp.transform[9];
@@ -590,7 +592,7 @@ void CGlutWindow::drawTransducer(){
 		glPopMatrix();
 		
 		//v_plano[0] = transform[12];
-		printf("%i -- %f - %f -- %f - %f\n",rotxUltrasound, rotx,684 - temp.transform[9], transform[14], list_of_artifacts.size());
+		printf("%i -- %f - %f -- %f - %f\n",rotxUltrasound, rotx,initialPosBratrack - temp.transform[9], transform[14], list_of_artifacts.size());
 	//}
 	
 }

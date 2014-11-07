@@ -543,9 +543,9 @@ void CGlutWindow::drawTransducer(){
 				initialPosBratrack = temp.transform[9];
 			}
 			if(temp.transform[9] < rotx)
-				xx+=0.5;
+				xx+=0.1;
 			else if(temp.transform[9] > rotx)
-				xx-=0.5;
+				xx-=0.1;
 
 			if(abs((long long int)(initialPosBratrack - temp.transform[9])) < (m_datasetInfo.resWidth/2)){
 				xx = (initialPosBratrack - temp.transform[9]);
@@ -557,9 +557,9 @@ void CGlutWindow::drawTransducer(){
 		}	
 		rotx = temp.transform[9];
 		firstIgnore++;
-		transform[12] = temp.transform[9]*0.01;
-		transform[13] = yy;//temp.transform[10];
-		transform[14] = zz;//temp.transform[11];
+		transform[12] = temp.transform[9]*0.01;	// translation x
+		transform[13] = 0;//temp.transform[10];
+		transform[14] = 0;//temp.transform[11];
 		transform[15] = 1.0;
 		
 		glPushMatrix();
@@ -736,10 +736,6 @@ void CGlutWindow::cgRenderGeometry() {
 
  	}
  	glEnd();
-
- 	//glPushMatrix();
-	//drawTransducer();
-	//glPopMatrix();
 	
 	CGprofile vertProfile = s_vertexProfile;
 	CGprofile fragProfile = s_fragmentProfile;
@@ -749,7 +745,7 @@ void CGlutWindow::cgRenderGeometry() {
 	CGprogram fragProg; 
 
 	CVector plano;
-	m_nMode = 3;
+	m_nMode = 0;
 	switch(m_nMode) {
 		
 		default:
@@ -785,7 +781,7 @@ void CGlutWindow::cgRenderGeometry() {
 			fragProg = m_pFragmentPrograms[3];
 			cgGLSetParameter4dv(cgGetNamedParameter(fragProg,"plano"),&(plano[0]));
 			//cgGLSetParameter1d(cgGetNamedParameter(fragProg,"side"),m_changeVolumeSide);
-			cgGLSetParameter1d(cgGetNamedParameter(fragProg,"side"),3);//2
+			cgGLSetParameter1d(cgGetNamedParameter(fragProg,"side"),1);//2
 			cgGLSetStateMatrixParameter(cgGetNamedParameter(fragProg, "ModelView"),
                                 CG_GL_MODELVIEW_MATRIX, CG_GL_MATRIX_IDENTITY);			
 			break;

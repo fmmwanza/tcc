@@ -20,18 +20,20 @@ Ultrasound::Ultrasound(int width, int height, int depth, char *filename){
 	depthIn = depth;
 	p1X =0;// (int)widthIn/2;
 	p2X = 0;//(int)widthIn/2;
-	p3X = 0;//(int)widthIn/2;
+	p3X = (int)widthIn/2;//(int)widthIn/2;
 
-	p1Z = 0.0;
+	p1Z = (int)widthIn/2;;
 	p1Y = 0.0;
 
-	p2Z = 0.0;
-	p2Y = widthIn;
+	p2Z = (int)widthIn/2;
+	p2Y = (int)widthIn/2;
 
-	p3Z = widthIn;
+	p3Z = (int)widthIn/2;;
 	p3Y = 0.0;
+	windowWidth = 600;
+	windowHeight = 600;
 
-	glutInitWindowSize (600,400); 
+	glutInitWindowSize (windowWidth,windowHeight); 
 	glutInitWindowPosition (900, 0);
 	secondScreen = glutCreateWindow ("ultrasound");
 
@@ -47,8 +49,8 @@ void Ultrasound::applyTexture(unsigned char *pVolume){
 	glBindTexture( GL_TEXTURE_2D, textura);
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
@@ -57,8 +59,7 @@ void Ultrasound::applyTexture(unsigned char *pVolume){
 }
 
 void Ultrasound::updateFromBratrack(int x){
-
-			p1X=x;p2X=x;p3X=x;
+			p1Z=x;p2Z=x;p3Z=x;
 			getSlice();
 }
 
@@ -85,7 +86,7 @@ void Ultrasound::getSlice(){
 	for (int i = 0; i < widthIn; ++i){
 		for (int j = 0; j < heightIn; ++j){
 			//pVolume[ijn(i,j,heightIn)] = datasetRaw[(int)interp1.z][ijn((int)interp1.y,(int)interp2.x,heightIn)];
-			pVolume[ijn(j,i,heightIn)] = datasetRaw[(int)interp1.x][ijn((int)interp1.y,(int)interp2.z,heightIn)];
+			pVolume[ijn(j,i,heightIn)] = datasetRaw[(int)interp1.z][ijn((int)interp1.y,(int)interp2.x,heightIn)];
 			interp2 = interp2 + dx2 + v2;
 		} 
 		interp1 = interp1+dx1+v1;
@@ -108,13 +109,13 @@ void Ultrasound::display(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-	glViewport(0,0,640,480);        // Reset The Current Viewport
+	glViewport(0,0,600,600);        // Reset The Current Viewport
 
 	glMatrixMode(GL_PROJECTION);    // Select The Projection Matrix
 	glLoadIdentity();               // Reset The Projection Matrix
 
-	gluPerspective(15.0f,1.0,0.3f,200.0f);//(GLfloat)640/(GLfloat)480
-	gluLookAt(0,0,10, 0,-2,0, 0,1,0);
+	gluPerspective(27.0f,windowWidth/windowHeight,0.3f,100.0f);//(GLfloat)640/(GLfloat)480
+	gluLookAt(0,0,10, 0,-2,0, 0,5,0);
 
     glEnable(GL_TEXTURE_2D);
    
@@ -128,9 +129,9 @@ void Ultrasound::display(){
 	// glEnd();
 
 	const float PI = 3.14;
-	const float MIN_ANGLE = -PI/12;
-	const float MAX_ANGLE = PI/12;
-	const float SECTOR_RAD = PI/3;
+	const float MIN_ANGLE = -PI/5;
+	const float MAX_ANGLE = PI/5;
+	const float SECTOR_RAD = PI;
 
 	//glEnable(GL_TEXTURE_2D);
     //glBindTexture( GL_TEXTURE_2D,  m_pTextureIds[1]);
@@ -138,6 +139,7 @@ void Ultrasound::display(){
 	glBegin(GL_QUAD_STRIP);
 	int x1 = 0;  //origin of sector array
 	int y1 = 0;
+	int xIni =0;
 
 	float radius = 4.0;
 	//float radius1 = 1.0;
@@ -146,11 +148,12 @@ void Ultrasound::display(){
 	//Need to loop through A-lines and specify end then start for vertexes
 	for(float angle = 3*PI/2 + MIN_ANGLE; angle <= (3*PI/2 + MAX_ANGLE + (SECTOR_RAD/t)); angle += SECTOR_RAD/t)
 	{
-		float vnorm = 1.0 - ((angle - PI - MIN_ANGLE)/SECTOR_RAD);
+		float vnorm = 1.5 - ((angle - PI - MIN_ANGLE)/SECTOR_RAD);
 		glTexCoord2f(vnorm, 0.5);
 		glVertex2f(x1,y1);   //beginning of A-line in image 
 		glTexCoord2f(vnorm, 0.0); 
 		glVertex2f(x1 + cos(angle)*radius, y1 + sin(angle)*radius);//end of A-line in image
+		//xIni+=1.0;
 	}
 	glEnd();
 	glFlush();

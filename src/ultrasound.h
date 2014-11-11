@@ -41,8 +41,10 @@ public:
 	int widthIn;
 	int heightIn;
 	int depthIn;
+	float windowWidth, windowHeight;
 	unsigned char **datasetRaw;
 	unsigned char **volumeMatrix2D;// = new unsigned char*[32];
 	long mat_plano[32][32][32];
 	int secondScreen;
+	float z1,z2,x1,x2;
 };

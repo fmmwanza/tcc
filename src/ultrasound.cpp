@@ -49,7 +49,7 @@ void Ultrasound::applyTexture(unsigned char *pVolume){
 	glBindTexture( GL_TEXTURE_2D, textura);
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -65,7 +65,7 @@ void Ultrasound::updateFromBratrack(int x){
 
 void Ultrasound::getSlice(){
 
-	int size = widthIn*heightIn;
+	int size = (widthIn + (int)(widthIn/2))*( heightIn + (int)(heightIn/2));
 	unsigned char *pVolume = new unsigned char[size];
 
     vector3f p1(p1X,p1Y,p1Z);
@@ -114,8 +114,8 @@ void Ultrasound::display(){
 	glMatrixMode(GL_PROJECTION);    // Select The Projection Matrix
 	glLoadIdentity();               // Reset The Projection Matrix
 
-	gluPerspective(27.0f,windowWidth/windowHeight,0.3f,100.0f);//(GLfloat)640/(GLfloat)480
-	gluLookAt(0,0,10, 0,-2,0, 0,5,0);
+	gluPerspective(20.0f,windowWidth/windowHeight,0.3f,100.0f);//(GLfloat)640/(GLfloat)480
+	gluLookAt(0,0,10, 0,-2.5,0, 0,5,0);
 
     glEnable(GL_TEXTURE_2D);
    
@@ -129,9 +129,9 @@ void Ultrasound::display(){
 	// glEnd();
 
 	const float PI = 3.14;
-	const float MIN_ANGLE = -PI/5;
-	const float MAX_ANGLE = PI/5;
-	const float SECTOR_RAD = PI;
+	const float MIN_ANGLE = -PI/8;
+	const float MAX_ANGLE = PI/8;
+	const float SECTOR_RAD = PI/2;
 
 	//glEnable(GL_TEXTURE_2D);
     //glBindTexture( GL_TEXTURE_2D,  m_pTextureIds[1]);
@@ -149,7 +149,7 @@ void Ultrasound::display(){
 	for(float angle = 3*PI/2 + MIN_ANGLE; angle <= (3*PI/2 + MAX_ANGLE + (SECTOR_RAD/t)); angle += SECTOR_RAD/t)
 	{
 		float vnorm = 1.5 - ((angle - PI - MIN_ANGLE)/SECTOR_RAD);
-		glTexCoord2f(vnorm, 0.5);
+		glTexCoord2f(vnorm, 0.7);
 		glVertex2f(x1,y1);   //beginning of A-line in image 
 		glTexCoord2f(vnorm, 0.0); 
 		glVertex2f(x1 + cos(angle)*radius, y1 + sin(angle)*radius);//end of A-line in image

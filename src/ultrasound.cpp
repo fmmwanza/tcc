@@ -1,8 +1,12 @@
 #include "ultrasound.h"
 #include "mathutil/vector3f.h"
-
+#include "medianfilter.h"
+#include "cvWiener2.h"
+//#include <wavelet2s.h>
 
 using namespace std;
+
+
 
 Ultrasound::Ultrasound(){
 
@@ -67,6 +71,9 @@ void Ultrasound::getSlice(){
 
 	int size = (widthIn + (int)(widthIn/2))*( heightIn + (int)(heightIn/2));
 	unsigned char *pVolume = new unsigned char[size];
+	unsigned char *result = new unsigned char[size];
+	int *tempArra = new int[size];
+	const void* srcArr;
 
     vector3f p1(p1X,p1Y,p1Z);
 	vector3f p2(p2X,p2Y,p2Z);
@@ -92,10 +99,20 @@ void Ultrasound::getSlice(){
 		interp1 = interp1+dx1+v1;
 		interp2 = p2;
 	}
-				
-	applyTexture(pVolume);
+
+	for (int i = 0; i < size; ++i)
+	{
+		tempArra[i] = pVolume[i];
+		//printf("%d \n",tempArra[i]);
+	}
+	//srcArr = (int)pVolume;
+
+	//medianfilter(pVolume,result, widthIn, heightIn);
+	cvWiener2(tempArra,result);
+	applyTexture(result);
 
 	delete [] pVolume;
+	delete [] result;
 }
 
 void Ultrasound::setScreen(){
@@ -221,3 +238,6 @@ void Ultrasound::keyEvent(char key){
 	}
 	glutPostRedisplay();
 }
+
+
+

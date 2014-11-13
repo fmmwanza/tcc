@@ -10,18 +10,27 @@
 1.5 - Funcionamento de um aparelho de ultrassom
 1.6 - Principais uso de ultrassom
 1.7 - Ultrassom 3D
-2 - Bratrack
+2. Imagem medical
 2.1 - Introdução
-2.2 - Descrição
-2.3 - Funcionamento
-2.4 - Aplicações práticas
-3 - Aplicação desenvolvida
-3.1 - Descrição
-3.2 - funcionamento
-3.3 - Algoritmos
-3.4 - Casos de testes
-3.5 - Resultados
-4 - Conclusão
+2.2 - Radiografia
+2.3 - Resonancia magnetica
+2.4 - tomografia
+2.5 - ultrassom
+2.6 - classificação e relação entre os tipos de imagens
+3 - Bratrack
+3.1 - Introdução
+3.2 - Descrição
+3.3 - Funcionamento
+3.4 - Aplicações práticas
+4 - Aplicação simulando a ultrassonografia
+4.1 - Descrição
+4.2 - funcionamento
+4.3 - Algoritmos
+4.4 - Casos de testes
+4.5 - Resultados
+5 - Conclusão
+5.1 - Limitação
+5.2 - Trabalhos futuros
 
 
 O trabalho consiste em projetar, implementar e avaliar um sistema que simula o método de diagnóstico por imagem conhecido como ultrassonografia. Está dividido em duas partes:

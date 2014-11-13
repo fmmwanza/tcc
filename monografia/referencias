@@ -1,0 +1,83 @@
+*Title: simulation of ultrasound from CT
+
+
+*Proposition:
+
+simulation of ultrasound from CT,
+which is realistic enough to allow for a stable registration, yet is
+computationally efficient at the same time. This has the added ben-
+efit that the simulation can be used by physicians or sonographers
+during planning, to get a feeling for the accessibility and optimal
+orientations even before the ultrasound exam, or the ultrasound-
+guided intervention. Furthermore, a novel similarity measure is
+developed, which is invariant to missing simulation details, yield-
+ing smooth properties and a global maximum at the correct align-
+ment.
+
+
+*Desavantagem da ultrassom
+
+A qualidade da imagem é péssima devido aos efeitos do ruído conhecido como ruído do speckle.
+
+
+
+*Ultrasound
+
+http://books.google.com.br/books?id=qQpz7Oj5zZMC&pg=PA486&lpg=PA486&dq=Richards+DS.+Obstetrical+ultrasound&source=bl&ots=I-qKWBE7ms&sig=Nwckhj5aIcxZIlLotOnYAYYBU5Q&hl=pt-BR&sa=X&ei=hfxWVOI5wauDBJH-g4gF&ved=0CF4Q6AEwBw#v=onepage&q=Richards%20DS.%20Obstetrical%20ultrasound&f=false
+
+http://www.scielo.br/scielo.php?script=sci_arttext&pid=S0004-27492003000100007
+
+http://campar.in.tum.de/twiki/pub/Main/AthanasiosKaramalis/Thesis.pdf
+
+[Automatic CT-ultrasound registration for diagnostic imaging
+and image-guided intervention, Wolfgang Wein a,*, Shelby Brunke b, Ali Khamene a, Matthew R. Callstrom c, Nassir Navab d] =>
+
+US imaging has several limiting factors that affect the
+use of this methodology for lesional identification and for its use as
+a guidance method. These factors include: 
+(1) image acquisition is
+user dependent, 
+(2) the field of view is limited, 
+(3) US images are typically acquired off true axial, sagittal, or coronal planes with
+resultant difficulty correlating with these other cross-sectional
+imaging methods, 
+(4) lesional identification can be difficult due
+to its echogenicity relative to the organ that is interrogated, and
+(5) the quality of the imaging is affected by the physical character-
+istics of the patient and overlying structures such as ribs, subcuta-
+neous fat, and normal gas-containing structures. In this context,
+the fusion of CT and ultrasound can improve the diagnostic value
+to an extent beyond the ‘‘sum” of the individual modalities, poten-
+tially sparing an invasive biopsy, where a tissue sample for further
+pathological examination is obtained.
+
+
+
+*Filter
+
+Caloope, P. B., et al. "A comparison of filters for ultrasound images." Telecommunications and Networking-ICT 2004. Springer Berlin Heidelberg, 2004. 1035-1040.
+NBR 6023	
+
+@incollection{caloope2004comparison,
+  title={A comparison of filters for ultrasound images},
+  author={Caloope, PB and Medeiros, F{\'a}tima NS and Marques, R{\'e}gis CP and Costa, Rodrigo CS},
+  booktitle={Telecommunications and Networking-ICT 2004},
+  pages={1035--1040},
+  year={2004},
+  publisher={Springer}
+}
+
+
+
+
+
+
+
+*Siglas
+
+CT = computer tomography
+MRI = magnetic resonance imaging
+US = ultrasound
+RMSE = Root Mean Square Error
+PSNR = Peak Signal to Noise Ratio
+

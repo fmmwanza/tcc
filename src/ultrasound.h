@@ -15,7 +15,6 @@
 #include <string.h>
 #include <iostream>
 
-
 using namespace std;
 
 #define ijn(a,b,n) ((a)*(n))+b

@@ -431,13 +431,13 @@ void CGlutWindow::mouseMoveEvent(int x,int y){
 
 void CGlutWindow::idle(){
 
-	unsigned long long int time_stamp;
-	try{
-		udpReceiver.receive_frame_not_blocking(time_stamp,list_of_artifacts);
-	}
-	catch(...){
-		cout << "error" << std::endl;
-	}
+	// unsigned long long int time_stamp;
+	// try{
+	// 	udpReceiver.receive_frame_not_blocking(time_stamp,list_of_artifacts);
+	// }
+	// catch(...){
+	// 	cout << "error" << std::endl;
+	// }
 	glutPostRedisplay();
 }
 

@@ -66,7 +66,7 @@ void cvWiener2(const void* srcArr, void* dstArr, int szWindowX, int szWindowY )
 	int nCols;
     CvMat *p_kernel = NULL;
     CvMat srcStub, *srcMat = NULL;
-    CvMat *p_tmpMat1, *p_tmpMat2, *p_tmpMat3, *p_tmpMat4;
+    CvMat *p_tmpMat1, *p_tmpMat2, *p_tmpMat3, *p_tmpMat4,*input;
 	double noise_power;
 
 	__BEGIN__;
@@ -89,6 +89,9 @@ void cvWiener2(const void* srcArr, void* dstArr, int szWindowX, int szWindowY )
 
 	//Convert to matrices
 	srcMat = (CvMat*) srcArr;
+	//input = cvCreateMat(256, 256, CV_8UC1);
+	//input = srcArr;
+	//srcMat = CvMat(256,256,CV_8UC1,&srcArr);
 
 	if ( !CV_IS_MAT(srcArr) ) {
 		CV_CALL ( srcMat = cvGetMat(srcMat, &srcStub, 0, 1) ) ;

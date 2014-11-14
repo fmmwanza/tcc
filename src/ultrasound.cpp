@@ -100,15 +100,18 @@ void Ultrasound::getSlice(){
 		interp2 = p2;
 	}
 
-	for (int i = 0; i < size; ++i)
-	{
-		tempArra[i] = pVolume[i];
-		//printf("%d \n",tempArra[i]);
-	}
 	//srcArr = (int)pVolume;
 
-	//medianfilter(pVolume,result, widthIn, heightIn);
-	cvWiener2(tempArra,result);
+	medianfilter(pVolume,result, widthIn, heightIn);	//Median filter
+	//cvWiener2(pVolume,result,3,3);	//Wiener filter
+	medianfilter(result, pVolume, widthIn, heightIn);
+	medianfilter(pVolume,result, widthIn, heightIn);
+	medianfilter(result, pVolume, widthIn, heightIn);
+	medianfilter(pVolume,result, widthIn, heightIn);
+	medianfilter(result, pVolume, widthIn, heightIn);
+	medianfilter(pVolume,result, widthIn, heightIn);
+	medianfilter(result, pVolume, widthIn, heightIn);
+	medianfilter(pVolume,result, widthIn, heightIn);
 	applyTexture(result);
 
 	delete [] pVolume;

@@ -1,7 +1,7 @@
 #include "ultrasound.h"
 #include "mathutil/vector3f.h"
 #include "medianfilter.h"
-#include "cvWiener2.h"
+
 //#include <wavelet2s.h>
 
 using namespace std;
@@ -219,13 +219,13 @@ void Ultrasound::keyEvent(char key){
 	switch(key){
 
 		case 'w':// left back
-			p1X+=0.5;p2X-=0.5;p3X-=0.5;
+			//p1X+=0.5;p2X-=0.5;p3X-=0.5;
 			getSlice(); 
 			
 		break;
 
 		case 'z':// right back
-			p1X-=0.5;p2X+=0.5;p3X+=0.5;
+			//p1X-=0.5;p2X+=0.5;p3X+=0.5;
 			getSlice();
 		break;
 

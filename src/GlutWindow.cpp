@@ -23,7 +23,8 @@ BraTrackUDP::classInputProtocol udpReceiver;
 vector<type_artifact> list_of_artifacts;
 
 float trx = -1;
-float xx,yy,zz;
+int trans =0;
+float xx,yy,zz,transducerX;
 float rotx;
 int firstIgnore;
 
@@ -57,6 +58,7 @@ CGlutWindow::CGlutWindow(DATAINFO dInfo)
 	std::fill_n(v_plano, 4, 0.0);
 	xx = 0;yy=0;zz=0;
 	rotx =0;
+	transducerX =0;
 	rotxUltrasound = 0;
 	firstIgnore = 0;
 
@@ -174,7 +176,8 @@ void CGlutWindow::keyEvent(unsigned char key,int x,int y)
 	switch (key) {
 		case 'j':// rotate volume, +90°
 			{
-				xx+=0.01;
+				//xx+=0.01;
+				trans++;
 			
 				
 			}
@@ -431,13 +434,13 @@ void CGlutWindow::mouseMoveEvent(int x,int y){
 
 void CGlutWindow::idle(){
 
-	// unsigned long long int time_stamp;
-	// try{
-	// 	udpReceiver.receive_frame_not_blocking(time_stamp,list_of_artifacts);
-	// }
-	// catch(...){
-	// 	cout << "error" << std::endl;
-	// }
+	unsigned long long int time_stamp;
+	try{
+		udpReceiver.receive_frame_not_blocking(time_stamp,list_of_artifacts);
+	}
+	catch(...){
+		cout << "error" << std::endl;
+	}
 	glutPostRedisplay();
 }
 
@@ -512,10 +515,6 @@ void CGlutWindow::initializeAppParameters()
 
 void CGlutWindow::drawTransducer(){
 
-
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//glMatrixMode(GL_MODELVIEW);
-	//glLoadIdentity();
 	firstIgnore++;
 	glColor3d(0.5,1.0,0.8);
 	glLineWidth(4.0);
@@ -536,35 +535,37 @@ void CGlutWindow::drawTransducer(){
 		transform[9] = temp.transform[7];
 		transform[10] = temp.transform[8];
 		transform[11] = 0.0;
+		transform[12] =temp.transform[9]*0.005;
+			// translation x
+		transform[13] = 0;//temp.transform[10];
+		transform[14] = 0;//temp.transform[11];
+		transform[15] = 1.0;
 
 		if(firstIgnore > 1){
 			if(rotx == 0){
 				rotx = temp.transform[9];
 				initialPosBratrack = temp.transform[9];
 			}
-			if(temp.transform[9] < rotx)
-				xx+=0.1;
-			else if(temp.transform[9] > rotx)
-				xx-=0.1;
-
-			if(abs((long long int)(initialPosBratrack - temp.transform[9])) < (m_datasetInfo.resWidth/2)){
-				xx = (initialPosBratrack - temp.transform[9]);
-				rotxUltrasound =(int)(m_datasetInfo.resWidth/2) - xx;
+			transducerX = (int)((m_datasetInfo.resWidth/2) + transform[12]*100);
+			
+			if (transducerX > m_datasetInfo.resWidth)
+			{
+				rotxUltrasound = m_datasetInfo.resWidth - 1;
 			}
-			else{
-				rotxUltrasound =(int)(m_datasetInfo.resWidth/2) - xx;
+			else
+			if(transducerX < 0)
+			{
+				rotxUltrasound = 1;
+			}else
+			if((transducerX < m_datasetInfo.resWidth) && (transducerX > 0)){
+				rotxUltrasound = transducerX;
 			}
 		}	
-		rotx = temp.transform[9];
+		//rotx = temp.transform[9];
 		firstIgnore++;
-		transform[12] = temp.transform[9]*0.01;	// translation x
-		transform[13] = 0;//temp.transform[10];
-		transform[14] = 0;//temp.transform[11];
-		transform[15] = 1.0;
-		
 		glPushMatrix();
 		//glTranslated(-6.83,-1146,-302);
-		glTranslated(-6.83,1,0);
+		glTranslated(0,1,0);
 		glRotated(120,1,0,0);
 		glMultMatrixd(transform);
 
@@ -592,7 +593,7 @@ void CGlutWindow::drawTransducer(){
 		glPopMatrix();
 		
 		//v_plano[0] = transform[12];
-		printf("%i -- %f - %f -- %f - %f\n",rotxUltrasound, rotx,initialPosBratrack - temp.transform[9], transform[14], list_of_artifacts.size());
+		printf("%f -- %i\n",transform[12], rotxUltrasound);
 	//}
 	
 }

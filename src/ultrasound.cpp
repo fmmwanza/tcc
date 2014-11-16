@@ -71,7 +71,7 @@ void Ultrasound::getSlice(){
 
 	int size = (widthIn + (int)(widthIn/2))*( heightIn + (int)(heightIn/2));
 	unsigned char *pVolume = new unsigned char[size];
-	unsigned char *result = new unsigned char[size];
+	//unsigned char *result = new unsigned char[size];
 	int *tempArra = new int[size];
 	const void* srcArr;
 
@@ -102,20 +102,20 @@ void Ultrasound::getSlice(){
 
 	//srcArr = (int)pVolume;
 
-	medianfilter(pVolume,result, widthIn, heightIn);	//Median filter
+	// medianfilter(pVolume,result, widthIn, heightIn);	//Median filter
 	//cvWiener2(pVolume,result,3,3);	//Wiener filter
-	medianfilter(result, pVolume, widthIn, heightIn);
-	medianfilter(pVolume,result, widthIn, heightIn);
-	medianfilter(result, pVolume, widthIn, heightIn);
-	medianfilter(pVolume,result, widthIn, heightIn);
-	medianfilter(result, pVolume, widthIn, heightIn);
-	medianfilter(pVolume,result, widthIn, heightIn);
-	medianfilter(result, pVolume, widthIn, heightIn);
-	medianfilter(pVolume,result, widthIn, heightIn);
-	applyTexture(result);
+	// medianfilter(result, pVolume, widthIn, heightIn);
+	// medianfilter(pVolume,result, widthIn, heightIn);
+	// medianfilter(result, pVolume, widthIn, heightIn);
+	// medianfilter(pVolume,result, widthIn, heightIn);
+	// medianfilter(result, pVolume, widthIn, heightIn);
+	// medianfilter(pVolume,result, widthIn, heightIn);
+	// medianfilter(result, pVolume, widthIn, heightIn);
+	// medianfilter(pVolume,result, widthIn, heightIn);
+	applyTexture(pVolume);
 
 	delete [] pVolume;
-	delete [] result;
+	//delete [] result;
 }
 
 void Ultrasound::setScreen(){
@@ -205,6 +205,13 @@ void Ultrasound::loadTexture(char *filename){
 				datasetRaw[h][ijn(w,d,heightIn)] = value;
 			}
 
+	//apply filter
+	//Median filter
+	for (int filterN = 0; filterN <= 5; ++filterN){
+		for (int x = 0; x < widthIn; ++x){
+			medianfilter(datasetRaw[x], datasetRaw[x], widthIn, heightIn);
+		}
+	}
 	fclose(pFile);
 }
 

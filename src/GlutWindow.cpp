@@ -60,6 +60,7 @@ CGlutWindow::CGlutWindow(DATAINFO dInfo)
 	rotx =0;
 	transducerX =0;
 	rotxUltrasound = 0;
+	transducerOut = false;
 	firstIgnore = 0;
 
 	m_dFieldOfView = 30.0;
@@ -439,7 +440,7 @@ void CGlutWindow::idle(){
 		udpReceiver.receive_frame_not_blocking(time_stamp,list_of_artifacts);
 	}
 	catch(...){
-		cout << "error" << std::endl;
+		cout << "error " << std::endl;
 	}
 	glutPostRedisplay();
 }
@@ -542,31 +543,38 @@ void CGlutWindow::drawTransducer(){
 		transform[15] = 1.0;
 
 		if(firstIgnore > 1){
-			if(rotx == 0){
-				rotx = temp.transform[9];
-				initialPosBratrack = temp.transform[9];
-			}
+
 			transducerX = (int)((m_datasetInfo.resWidth/2) + transform[12]*100);
 			
-			if (transducerX > m_datasetInfo.resWidth)
-			{
-				rotxUltrasound = m_datasetInfo.resWidth - 1;
-			}
-			else
-			if(transducerX < 0)
-			{
-				rotxUltrasound = 1;
-			}else
+			// if (transducerX > m_datasetInfo.resWidth)
+			// {
+			// 	rotxUltrasound = m_datasetInfo.resWidth - 1;
+			// 	//transducerOut = true;
+			// }
+			// else
+			// if(transducerX < 0)
+			// {
+			// 	rotxUltrasound = 1;
+			// 	//transducerOut = true;
+			// }else
 			if((transducerX < m_datasetInfo.resWidth) && (transducerX > 0)){
 				rotxUltrasound = transducerX;
+				transducerOut = false;
+			}else{						// transducer of target
+				transducerOut = true;
+			if(transducerX > m_datasetInfo.resWidth)
+				rotxUltrasound = m_datasetInfo.resWidth - 1;
+			else
+				rotxUltrasound = 1;
 			}
+				
 		}	
 		//rotx = temp.transform[9];
 		firstIgnore++;
 		glPushMatrix();
 		//glTranslated(-6.83,-1146,-302);
 		glTranslated(0,1,0);
-		glRotated(120,1,0,0);
+		glRotated(180,1,0,0);
 		glMultMatrixd(transform);
 
 		glBegin(GL_LINES);
@@ -593,9 +601,8 @@ void CGlutWindow::drawTransducer(){
 		glPopMatrix();
 		
 		//v_plano[0] = transform[12];
-		printf("%f -- %i\n",transform[12], rotxUltrasound);
+	//	printf("Number of artefacts: %f \n",transform[12]);
 	//}
-	
 }
 
 bool CGlutWindow::loadTextures() {

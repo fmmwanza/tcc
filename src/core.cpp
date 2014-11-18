@@ -7,6 +7,7 @@ Ultrasound *secondWindow;
 //Ultrasound *Core::secondScreen=0;
 unsigned int Core::fpsCurrent=0;
 unsigned int Core::fpsCount=0;
+bool setUltrasound;
 
 
 Core::Core(int c_argc, char **c_argv)
@@ -22,10 +23,14 @@ Core::Core(int c_argc, char **c_argv)
 	c_datasetInfo.initStack    = atoi(c_argv[4]);
 	c_datasetInfo.endStack     = atoi(c_argv[5]);
 	c_datasetInfo.resDepth     = c_datasetInfo.endStack - c_datasetInfo.initStack;
-	
 	c_pMainWindow = new CGlutWindow(c_datasetInfo);	
-	secondWindow = new Ultrasound(c_datasetInfo.resWidth,c_datasetInfo.resHeight,c_datasetInfo.resDepth, c_datasetInfo.inputFileName);
-	c_pMainWindow->setScreen();
+
+	if(toupper(c_argv[6][0]) == 'Y')
+	{
+		secondWindow = new Ultrasound(c_datasetInfo.resWidth,c_datasetInfo.resHeight,c_datasetInfo.resDepth, c_datasetInfo.inputFileName);
+		c_pMainWindow->setScreen();
+		setUltrasound = true;
+	}
 }
 
 Core::~Core(){}
@@ -49,14 +54,14 @@ void Core::display(void)
 
 	c_pMainWindow->renderFrame();
 	fpsCurrent++;
-	secondWindow->updateFromBratrack(c_pMainWindow->rotxUltrasound);
-	secondWindow->setScreen();
-	secondWindow->getSlice();
-	secondWindow->display();
 
-	//cout<<c_pMainWindow->rotxUltrasound<<endl;
-	//
-	c_pMainWindow->setScreen();
+	if(setUltrasound){
+		secondWindow->updateFromBratrack(c_pMainWindow->rotxUltrasound, c_pMainWindow->transducerOut);
+		secondWindow->setScreen();
+		secondWindow->getSlice();
+		secondWindow->display();
+		c_pMainWindow->setScreen();
+	}
 }
 
 void Core::idle(void)

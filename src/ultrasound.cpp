@@ -6,7 +6,7 @@
 
 using namespace std;
 
-
+bool transducer = false;
 
 Ultrasound::Ultrasound(){
 
@@ -62,8 +62,9 @@ void Ultrasound::applyTexture(unsigned char *pVolume){
 	
 }
 
-void Ultrasound::updateFromBratrack(int x){
+void Ultrasound::updateFromBratrack(int x, bool updateFromBratrack){
 			p1Z=x;p2Z=x;p3Z=x;
+			transducer = updateFromBratrack;
 			getSlice();
 }
 
@@ -147,35 +148,36 @@ void Ultrasound::display(){
 	// 	glTexCoord2f(0.5, 0.5); glVertex2f(1.5, 1.5); 
 	// 	glTexCoord2f(0.5, 0.0); glVertex2f(1.5, 0.0);
 	// glEnd();
+    if(!transducer){
+		const float PI = 3.14;
+		const float MIN_ANGLE = -PI/8;
+		const float MAX_ANGLE = PI/8;
+		const float SECTOR_RAD = PI/2;
 
-	const float PI = 3.14;
-	const float MIN_ANGLE = -PI/8;
-	const float MAX_ANGLE = PI/8;
-	const float SECTOR_RAD = PI/2;
+		glBegin(GL_QUAD_STRIP);
+		int x1 = 0;  //origin of sector array
+		int y1 = 0;
+		int xIni =0;
 
-	//glEnable(GL_TEXTURE_2D);
-    //glBindTexture( GL_TEXTURE_2D,  m_pTextureIds[1]);
+		float radius = 4.0;
+		//float radius1 = 1.0;
 
-	glBegin(GL_QUAD_STRIP);
-	int x1 = 0;  //origin of sector array
-	int y1 = 0;
-	int xIni =0;
-
-	float radius = 4.0;
-	//float radius1 = 1.0;
-
-	float t = 333.0;
-	//Need to loop through A-lines and specify end then start for vertexes
-	for(float angle = 3*PI/2 + MIN_ANGLE; angle <= (3*PI/2 + MAX_ANGLE + (SECTOR_RAD/t)); angle += SECTOR_RAD/t)
-	{
-		float vnorm = 1.5 - ((angle - PI - MIN_ANGLE)/SECTOR_RAD);
-		glTexCoord2f(vnorm, 0.7);
-		glVertex2f(x1,y1);   //beginning of A-line in image 
-		glTexCoord2f(vnorm, 0.0); 
-		glVertex2f(x1 + cos(angle)*radius, y1 + sin(angle)*radius);//end of A-line in image
-		//xIni+=1.0;
+		float t = 333.0;
+		//Need to loop through A-lines and specify end then start for vertexes
+		for(float angle = 3*PI/2 + MIN_ANGLE; angle <= (3*PI/2 + MAX_ANGLE + (SECTOR_RAD/t)); angle += SECTOR_RAD/t)
+		{
+			float vnorm = 1.5 - ((angle - PI - MIN_ANGLE)/SECTOR_RAD);
+			glTexCoord2f(vnorm, 0.7);
+			glVertex2f(x1,y1);   //beginning of A-line in image 
+			glTexCoord2f(vnorm, 0.0); 
+			glVertex2f(x1 + cos(angle)*radius, y1 + sin(angle)*radius);//end of A-line in image
+			//xIni+=1.0;
+		}
+		glEnd();
+	}else{
+		glClearColor(0.0,0.0,0.0,0.0);
 	}
-	glEnd();
+
 	glFlush();
  	glutSwapBuffers();
 }
@@ -207,11 +209,11 @@ void Ultrasound::loadTexture(char *filename){
 
 	//apply filter
 	//Median filter
-	for (int filterN = 0; filterN <= 5; ++filterN){
-		for (int x = 0; x < widthIn; ++x){
-			medianfilter(datasetRaw[x], datasetRaw[x], widthIn, heightIn);
-		}
-	}
+	// for (int filterN = 0; filterN <= 5; ++filterN){
+	// 	for (int x = 0; x < widthIn; ++x){
+	// 		medianfilter(datasetRaw[x], datasetRaw[x], widthIn, heightIn);
+	// 	}
+	// }
 	fclose(pFile);
 }
 

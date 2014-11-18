@@ -66,11 +66,11 @@ static char usage[] =
 "\n"
 "  (C) 2013 Volume Rendering\n"
 "\n"
-"  usage: ./volumeRendering <imagedata> <res width> <res height> <stack init> <stack end> \n"
+"  usage: ./volumeRendering <imagedata> <res width> <res height> <stack init> <stack end> <Y or N | ultrasound>\n"
 "\n"
 "  ex: "
 "\n"
-"	./volumeRendering Bucky.32x32x32.raw 32 32 0 32"
+"	./volumeRendering Bucky.32x32x32.raw 32 32 0 32 yes"
 "\n";
 
 

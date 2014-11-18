@@ -39,6 +39,7 @@ public:
 
 	int rotxUltrasound;
 	float initialPosBratrack;
+	bool transducerOut;
 	virtual void cgRenderGeometry();
 
 	void renderFrame();

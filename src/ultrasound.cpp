@@ -73,8 +73,7 @@ void Ultrasound::getSlice(){
 	int size = (widthIn + (int)(widthIn/2))*( heightIn + (int)(heightIn/2));
 	unsigned char *pVolume = new unsigned char[size];
 	//unsigned char *result = new unsigned char[size];
-	int *tempArra = new int[size];
-	const void* srcArr;
+
 
     vector3f p1(p1X,p1Y,p1Z);
 	vector3f p2(p2X,p2Y,p2Z);
@@ -102,6 +101,15 @@ void Ultrasound::getSlice(){
 	}
 
 	//srcArr = (int)pVolume;
+
+	//SPeckle noise //*************
+		// im = cv.LoadImage('tree.jpg', cv.CV_LOAD_IMAGE_GRAYSCALE)
+		// mult_noise = cv.CreateImage((im.width,im.height), cv.IPL_DEPTH_32F, 1)
+
+		// cv.RandArr(cv.RNG(6), mult_noise, cv.CV_RAND_NORMAL, 1, 0.1)    
+
+		// cv.Mul(im, mult_noise, im)
+	//************************///
 
 	// medianfilter(pVolume,result, widthIn, heightIn);	//Median filter
 	//cvWiener2(pVolume,result,3,3);	//Wiener filter

@@ -524,15 +524,15 @@ void CGlutWindow::drawTransducer(){
 	//for(unsigned int i=0; i<list_of_artifacts.size(); i++){
 		type_artifact & temp = list_of_artifacts[i];
 		//std::cout << temp.id << std::endl;
-		transform[0] = 0;//temp.transform[0];
-		transform[1] = 0;//temp.transform[1];
-		transform[2] = 0;//temp.transform[2];
+		transform[0] = temp.transform[0];
+		transform[1] = temp.transform[1];
+		transform[2] = temp.transform[2];
 		transform[3] = 0.0;
-		transform[4] = 0;//temp.transform[3];
+		transform[4] = temp.transform[3];
 		transform[5] = temp.transform[4];
 		transform[6] = temp.transform[5];
 		transform[7] = 0.0;
-		transform[8] = 0;//temp.transform[6];
+		transform[8] = temp.transform[6];
 		transform[9] = temp.transform[7];
 		transform[10] = temp.transform[8];
 		transform[11] = 0.0;
@@ -546,21 +546,10 @@ void CGlutWindow::drawTransducer(){
 
 			transducerX = (int)((m_datasetInfo.resWidth/2) + transform[12]*100);
 			
-			// if (transducerX > m_datasetInfo.resWidth)
-			// {
-			// 	rotxUltrasound = m_datasetInfo.resWidth - 1;
-			// 	//transducerOut = true;
-			// }
-			// else
-			// if(transducerX < 0)
-			// {
-			// 	rotxUltrasound = 1;
-			// 	//transducerOut = true;
-			// }else
 			if((transducerX < m_datasetInfo.resWidth) && (transducerX > 0)){
 				rotxUltrasound = transducerX;
 				transducerOut = false;
-			}else{						// transducer of target
+			}else{						// transducer out of target
 				transducerOut = true;
 			if(transducerX > m_datasetInfo.resWidth)
 				rotxUltrasound = m_datasetInfo.resWidth - 1;
@@ -594,8 +583,8 @@ void CGlutWindow::drawTransducer(){
 		glBegin(GL_TRIANGLES);
 			glColor3d(1.0,1.0,1.0);
 		    glVertex3f(0.0, 0.0, 0.0);
-		    glVertex3f( 0.0, -2.3,-1.5);   
-		    glVertex3f( 0.0f,-2.0,1.5);
+		    glVertex3f( 0.0,-2.3,-1.5);   
+		    glVertex3f( 0.0f,-2.3,1.5);
 		glEnd();
 
 		glPopMatrix();

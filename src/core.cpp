@@ -1,6 +1,5 @@
 #include "core.h"
 #include "ultrasound.h"
-#include "transdutor.h"
 
 CGlutWindow *Core::c_pMainWindow=0;
 Ultrasound *secondWindow;

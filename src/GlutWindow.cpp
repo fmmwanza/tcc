@@ -563,7 +563,7 @@ void CGlutWindow::drawTransducer(){
 		glPushMatrix();
 		//glTranslated(-6.83,-1146,-302);
 		glTranslated(0,1,0);
-		glRotated(180,1,0,0);
+		//glRotated(180,1,0,0);
 		glMultMatrixd(transform);
 
 		glBegin(GL_LINES);
@@ -589,8 +589,8 @@ void CGlutWindow::drawTransducer(){
 
 		glPopMatrix();
 		
-		//v_plano[0] = transform[12];
-	//	printf("Number of artefacts: %f \n",transform[12]);
+		v_plano[0] = -temp.transform[9];
+		printf("Number : %f \n",transform[12]);
 	//}
 }
 
@@ -637,11 +637,12 @@ void CGlutWindow::renderGeometry() {
     // in LoadCgPrograms() are bound.
 
 	glPushMatrix();
-	glRotated(90,trx,0,0); //rotate volume
 	
-	cgRenderGeometry();
-	glPopMatrix();
 	drawTransducer();
+	
+	glPopMatrix();
+	glRotated(90,trx,0,0); //rotate volume
+	cgRenderGeometry();
 
 }
 
@@ -742,7 +743,7 @@ void CGlutWindow::cgRenderGeometry() {
 	CGprogram fragProg; 
 
 	CVector plano;
-	m_nMode = 0;
+	m_nMode = 3;
 	switch(m_nMode) {
 		
 		default:
@@ -778,7 +779,7 @@ void CGlutWindow::cgRenderGeometry() {
 			fragProg = m_pFragmentPrograms[3];
 			cgGLSetParameter4dv(cgGetNamedParameter(fragProg,"plano"),&(plano[0]));
 			//cgGLSetParameter1d(cgGetNamedParameter(fragProg,"side"),m_changeVolumeSide);
-			cgGLSetParameter1d(cgGetNamedParameter(fragProg,"side"),1);//2
+			cgGLSetParameter1d(cgGetNamedParameter(fragProg,"side"),3);//2
 			cgGLSetStateMatrixParameter(cgGetNamedParameter(fragProg, "ModelView"),
                                 CG_GL_MODELVIEW_MATRIX, CG_GL_MATRIX_IDENTITY);			
 			break;

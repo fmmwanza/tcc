@@ -524,9 +524,9 @@ void CGlutWindow::drawTransducer(){
 	//for(unsigned int i=0; i<list_of_artifacts.size(); i++){
 		type_artifact & temp = list_of_artifacts[i];
 		//std::cout << temp.id << std::endl;
-		transform[0] = temp.transform[0]*0.1;
-		transform[1] = temp.transform[1]*0.1;
-		transform[2] = temp.transform[2]*0.1;
+		transform[0] = temp.transform[0];
+		transform[1] = temp.transform[1];
+		transform[2] = temp.transform[2];
 		transform[3] = 0.0;
 		transform[4] = temp.transform[3];
 		transform[5] = temp.transform[4];
@@ -580,17 +580,10 @@ void CGlutWindow::drawTransducer(){
 		glVertex3d(0.0,0.3,-0.3);
 		glEnd();
 
-		// glBegin(GL_TRIANGLES);
-		// 	glColor3d(1.0,1.0,1.0);
-		//     glVertex3f(0.0, 0.0, 0.0);
-		//     glVertex3f( 0.0,-2.3,-1.5);   
-		//     glVertex3f( 0.0f,-2.3,1.5);
-		// glEnd();
-
 		glPopMatrix();
 		
 		v_plano[0] = -temp.transform[9];
-		printf("Number : %f \n",transform[12]);
+		//printf("Number : %f \n",transform[12]);
 	//}
 }
 
@@ -646,6 +639,7 @@ void CGlutWindow::renderGeometry() {
 
 }
 
+// funcao muito lenta!!
 void CGlutWindow::cgRenderGeometry() {
 	int pViewport[4];
 	glGetIntegerv(GL_VIEWPORT,pViewport);
@@ -743,7 +737,7 @@ void CGlutWindow::cgRenderGeometry() {
 	CGprogram fragProg; 
 
 	CVector plano;
-	m_nMode = 3;
+	m_nMode = 0;
 	switch(m_nMode) {
 		
 		default:
@@ -887,8 +881,6 @@ void CGlutWindow::cgRenderGeometry() {
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-		//glAlphaFunc(GL_GREATER,0.2);
-		//glEnable(GL_ALPHA_TEST);
 		
 		float c = 1.0f-float(n)/float(m_nNumSlices);
 		glColor3f(c,c,c);
@@ -905,9 +897,9 @@ void CGlutWindow::cgRenderGeometry() {
 	
 	cgGLDisableProfile(vertProfile);
 	cgGLDisableProfile(fragProfile);
-	if (m_bDisplayTF) {
-		m_pTransferFunction->render();
-	}
+	// if (m_bDisplayTF) {
+	// 	m_pTransferFunction->render();
+	// }
 }
 
 bool CGlutWindow::handleButtonEvent(int button, int state, int x, int y) {

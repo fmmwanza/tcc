@@ -1,6 +1,7 @@
 #include "ultrasound.h"
 #include "mathutil/vector3f.h"
 #include "medianfilter.h"
+#include <random>
 
 //#include <wavelet2s.h>
 
@@ -22,6 +23,7 @@ Ultrasound::Ultrasound(int width, int height, int depth, char *filename){
 	widthIn = width;
 	heightIn = height;
 	depthIn = depth;
+	volumeSize =(widthIn + (int)(widthIn/2))*( heightIn + (int)(heightIn/2));
 	p1X =0;// (int)widthIn/2;
 	p2X = 0;//(int)widthIn/2;
 	p3X = (int)widthIn/2;//(int)widthIn/2;
@@ -68,11 +70,26 @@ void Ultrasound::updateFromBratrack(int x, bool updateFromBratrack){
 			getSlice();
 }
 
+unsigned char* Ultrasound::ultrasoundSpeckle(unsigned char *pVolume){
+
+	float variance = 2*PI;
+	float mean = 0;
+	std::default_random_engine generator;
+  	std::uniform_real_distribution<double> distribution(mean,variance);
+	unsigned char *speckle = new unsigned char[volumeSize];
+
+	for (int i=0; i < volumeSize ; ++i) {
+   	 double number = distribution(generator);
+   	 speckle[i] = pVolume[i] + number*pVolume[i];
+  	}
+	
+	medianfilter(speckle, speckle, widthIn, heightIn);
+	return speckle;
+}
+
 void Ultrasound::getSlice(){
 
-	int size = (widthIn + (int)(widthIn/2))*( heightIn + (int)(heightIn/2));
-	unsigned char *pVolume = new unsigned char[size];
-	//unsigned char *result = new unsigned char[size];
+	unsigned char *pVolume = new unsigned char[volumeSize];
 
 
     vector3f p1(p1X,p1Y,p1Z);
@@ -92,7 +109,6 @@ void Ultrasound::getSlice(){
 
 	for (int i = 0; i < widthIn; ++i){
 		for (int j = 0; j < heightIn; ++j){
-			//pVolume[ijn(i,j,heightIn)] = datasetRaw[(int)interp1.z][ijn((int)interp1.y,(int)interp2.x,heightIn)];
 			pVolume[ijn(j,i,heightIn)] = datasetRaw[(int)interp1.z][ijn((int)interp1.y,(int)interp2.x,heightIn)];
 			interp2 = interp2 + dx2 + v2;
 		} 
@@ -100,40 +116,19 @@ void Ultrasound::getSlice(){
 		interp2 = p2;
 	}
 
-	//srcArr = (int)pVolume;
-
-	//SPeckle noise //*************
-		// im = cv.LoadImage('tree.jpg', cv.CV_LOAD_IMAGE_GRAYSCALE)
-		// mult_noise = cv.CreateImage((im.width,im.height), cv.IPL_DEPTH_32F, 1)
-
-		// cv.RandArr(cv.RNG(6), mult_noise, cv.CV_RAND_NORMAL, 1, 0.1)    
-
-		// cv.Mul(im, mult_noise, im)
-	//************************///
-
-	// medianfilter(pVolume,result, widthIn, heightIn);	//Median filter
-	//cvWiener2(pVolume,result,3,3);	//Wiener filter
-	// medianfilter(result, pVolume, widthIn, heightIn);
-	// medianfilter(pVolume,result, widthIn, heightIn);
-	// medianfilter(result, pVolume, widthIn, heightIn);
-	// medianfilter(pVolume,result, widthIn, heightIn);
-	// medianfilter(result, pVolume, widthIn, heightIn);
-	// medianfilter(pVolume,result, widthIn, heightIn);
-	// medianfilter(result, pVolume, widthIn, heightIn);
-	// medianfilter(pVolume,result, widthIn, heightIn);
 	applyTexture(pVolume);
 
 	delete [] pVolume;
-	//delete [] result;
 }
 
 void Ultrasound::setScreen(){
 	glutSetWindow(secondScreen);
 }
 
+// funcao muito lenta!!
 void Ultrasound::display(){
 
-	glutSetWindow(secondScreen);
+	//glutSetWindow(secondScreen);
 	glClearColor(0.0,0.0,0.0,0.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -148,16 +143,19 @@ void Ultrasound::display(){
 
     glEnable(GL_TEXTURE_2D);
    
-    glBindTexture( GL_TEXTURE_2D, textura);
+   // glBindTexture( GL_TEXTURE_2D, textura);
 
- //    glBegin(GL_QUADS);
-	// 	glTexCoord2f(0.0, 0.0); glVertex2f(0.0, 0.0); 
-	// 	glTexCoord2f(0.0, 0.5); glVertex2f(0.0, 1.5); 
-	// 	glTexCoord2f(0.5, 0.5); glVertex2f(1.5, 1.5); 
-	// 	glTexCoord2f(0.5, 0.0); glVertex2f(1.5, 0.0);
-	// glEnd();
+ 
     if(!transducer){
-		const float PI = 3.14;
+
+
+  //   	glBegin(GL_QUADS);
+		// glTexCoord2f(0.0, 0.0); glVertex2f(0.0, 0.0); 
+		// glTexCoord2f(0.0, 0.5); glVertex2f(0.0, 1.0); 
+		// glTexCoord2f(0.5, 0.5); glVertex2f(1.0, 1.0); 
+		// glTexCoord2f(0.5, 0.0); glVertex2f(1.0, 0.0);
+		// glEnd();
+		
 		const float MIN_ANGLE = -PI/8;
 		const float MAX_ANGLE = PI/8;
 		const float SECTOR_RAD = PI/2;
@@ -179,7 +177,6 @@ void Ultrasound::display(){
 			glVertex2f(x1,y1);   //beginning of A-line in image 
 			glTexCoord2f(vnorm, 0.0); 
 			glVertex2f(x1 + cos(angle)*radius, y1 + sin(angle)*radius);//end of A-line in image
-			//xIni+=1.0;
 		}
 		glEnd();
 	}else{
@@ -215,13 +212,17 @@ void Ultrasound::loadTexture(char *filename){
 				datasetRaw[h][ijn(w,d,heightIn)] = value;
 			}
 
-	//apply filter
-	//Median filter
-	// for (int filterN = 0; filterN <= 5; ++filterN){
-	// 	for (int x = 0; x < widthIn; ++x){
-	// 		medianfilter(datasetRaw[x], datasetRaw[x], widthIn, heightIn);
+	//First, add speckle noise then
+	//Apply Median filter
+
+	// GLvoid *font_style = GLUT_BITMAP_TIMES_ROMAN_24;
+	// for (int i = 0;i < heightIn ; ++i){
+	// 		int percent =0;
+	// 		datasetRaw[i] = ultrasoundSpeckle(datasetRaw[i]);
+	// 		percent = (i * 100)/heightIn;
+	// 		cout << "Filtering :" << percent << "/100"<<endl;
 	// 	}
-	// }
+
 	fclose(pFile);
 }
 

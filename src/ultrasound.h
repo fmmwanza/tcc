@@ -18,6 +18,7 @@
 using namespace std;
 
 #define ijn(a,b,n) ((a)*(n))+b
+#define PI 3.141592
 
 class Ultrasound
 {
@@ -34,12 +35,14 @@ public:
 	void keyEvent(char key);
 	void setScreen();
 	void updateFromBratrack(int x, bool updateFromBratrack);
+	unsigned char *ultrasoundSpeckle(unsigned char *pVolume);
     unsigned char ***volumeMatrix3D;
 	GLuint textura;
 	float p1X,p1Y,p1Z,p2X,p2Y,p2Z,p3X,p3Y,p3Z;
 	int widthIn;
 	int heightIn;
 	int depthIn;
+	int volumeSize;
 	float windowWidth, windowHeight;
 	unsigned char **datasetRaw;
 	unsigned char **volumeMatrix2D;// = new unsigned char*[32];

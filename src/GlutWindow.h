@@ -40,6 +40,8 @@ public:
 	int rotxUltrasound;
 	float initialPosBratrack;
 	bool transducerOut;
+	int m_nWidth, m_nHeight;
+	int mainScreen;
 	virtual void cgRenderGeometry();
 
 	void renderFrame();
@@ -67,7 +69,7 @@ protected:
 	CGprogram *m_pFragmentPrograms;
 	//
 
-	int m_nWidth, m_nHeight;
+	
 	double m_dFieldOfView;
 	double m_dCenter, m_dRadius, m_dZoom;
 	
@@ -89,7 +91,7 @@ protected:
 
 
 
-	int mainScreen;
+	
 	void drawTransducer();
 
 	void initializeAppParameters();

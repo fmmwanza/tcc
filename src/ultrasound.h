@@ -28,6 +28,7 @@ public:
 	 ~Ultrasound(void);
 
 	void ultrasound();
+	void resize(int width, int height);
 	void getSlice();
 	void applyTexture(unsigned char *pVolume);
 	void display();

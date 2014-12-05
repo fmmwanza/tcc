@@ -42,8 +42,6 @@ Ultrasound::Ultrasound(int width, int height, int depth, char *filename){
 	glutInitWindowSize (windowWidth,windowHeight); 
 	glutInitWindowPosition (900, 0);
 	secondScreen = glutCreateWindow ("ultrasound");
-
-	//glutSetWindow(mainScreen);
 	loadTexture(filename);
 }
 
@@ -64,10 +62,15 @@ void Ultrasound::applyTexture(unsigned char *pVolume){
 	
 }
 
+void Ultrasound::resize(int width, int height) {
+
+	glViewport(0, 0, (GLsizei) width, (GLsizei) height);
+}
+
 void Ultrasound::updateFromBratrack(int x, bool updateFromBratrack){
 			p1Z=x;p2Z=x;p3Z=x;
 			transducer = updateFromBratrack;
-			getSlice();
+			//getSlice();
 }
 
 unsigned char* Ultrasound::ultrasoundSpeckle(unsigned char *pVolume){
@@ -128,11 +131,11 @@ void Ultrasound::setScreen(){
 // funcao muito lenta!!
 void Ultrasound::display(){
 
-	//glutSetWindow(secondScreen);
-	glClearColor(0.0,0.0,0.0,0.0);
+
+    glClearColor(0.0,0.0,0.0,0.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
+      
+    
 	glViewport(0,0,600,600);        // Reset The Current Viewport
 
 	glMatrixMode(GL_PROJECTION);    // Select The Projection Matrix
@@ -170,6 +173,7 @@ void Ultrasound::display(){
 
 		float t = 333.0;
 		//Need to loop through A-lines and specify end then start for vertexes
+		//int i=0;
 		for(float angle = 3*PI/2 + MIN_ANGLE; angle <= (3*PI/2 + MAX_ANGLE + (SECTOR_RAD/t)); angle += SECTOR_RAD/t)
 		{
 			float vnorm = 1.5 - ((angle - PI - MIN_ANGLE)/SECTOR_RAD);
@@ -177,12 +181,11 @@ void Ultrasound::display(){
 			glVertex2f(x1,y1);   //beginning of A-line in image 
 			glTexCoord2f(vnorm, 0.0); 
 			glVertex2f(x1 + cos(angle)*radius, y1 + sin(angle)*radius);//end of A-line in image
+			//i++;
 		}
+		//cout << i <<endl;
 		glEnd();
-	}else{
-		glClearColor(0.0,0.0,0.0,0.0);
 	}
-
 	glFlush();
  	glutSwapBuffers();
 }
@@ -230,13 +233,13 @@ void Ultrasound::keyEvent(char key){
 	switch(key){
 
 		case 'w':// left back
-			//p1X+=0.5;p2X-=0.5;p3X-=0.5;
+			p1X+=0.5;p2X-=0.5;p3X-=0.5;
 			getSlice(); 
 			
 		break;
 
 		case 'z':// right back
-			//p1X-=0.5;p2X+=0.5;p3X+=0.5;
+			p1X-=0.5;p2X+=0.5;p3X+=0.5;
 			getSlice();
 		break;
 
@@ -248,14 +251,14 @@ void Ultrasound::keyEvent(char key){
 			/*p1X+=0.5;*/p2X+=0.2;p3X-=0.5;
 			getSlice();
 		break;
-		// case 's':// z face up
-		// 	p1X-=0.5;p2X-=0.5;p3X-=0.5;
-		// 	getSlice();
-		// break;
-		// case 'x':// z face back
-		// 	p1X+=0.5;p2X+=0.5;p3X+=0.5;
-		// 	getSlice();
-		// break;
+		case 's':// z face up
+			p1X-=0.5;p2X-=0.5;p3X-=0.5;
+			getSlice();
+		break;
+		case 'x':// z face back
+			p1X+=0.5;p2X+=0.5;p3X+=0.5;
+			getSlice();
+		break;
 	}
 	glutPostRedisplay();
 }

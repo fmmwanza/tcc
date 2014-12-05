@@ -42,6 +42,9 @@ void CGlutWindow::setScreen(){
 	glutSetWindow(mainScreen);
 }
 
+
+
+
 CGlutWindow::CGlutWindow(DATAINFO dInfo)
 {
 	m_datasetInfo = dInfo;
@@ -116,49 +119,47 @@ void CGlutWindow::initializeCg()
 GLfloat fNear=5.0f;
 void CGlutWindow::renderFrame() {
 
-	double dAspectRatio = double(m_nWidth)/double(m_nHeight);
+	// double dAspectRatio = double(m_nWidth)/double(m_nHeight);
 
-	// The usual OpenGL stuff to clear the screen and set up viewing.
-	glClearColor(.5, .5, 1., 1.);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	// // The usual OpenGL stuff to clear the screen and set up viewing.
+	// glClearColor(.5, .5, 1., 1.);
+	// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	GLfloat fTop, fRight, fFar;
+	// GLfloat fTop, fRight, fFar;
 
-	//fNear   = float(m_dCenter - m_dRadius);
-	fFar    = float(m_dCenter + m_dRadius);
-	//printf("%f\n",fNear);
-	if (dAspectRatio > 1.0) {
-		fRight = fNear * float(tan(DEG2RAD(m_dFieldOfView)/2.0) /m_dZoom);
-		fTop   = fRight * float(dAspectRatio);		
-	} else {
-		fTop   = fNear * float(tan(DEG2RAD(m_dFieldOfView)/2.0) /m_dZoom);
-		fRight = fTop / float(dAspectRatio);
-	} 
+	// //fNear   = float(m_dCenter - m_dRadius);
+	// fFar    = float(m_dCenter + m_dRadius);
+	// //printf("%f\n",fNear);
+	// if (dAspectRatio > 1.0) {
+	// 	fRight = fNear * float(tan(DEG2RAD(m_dFieldOfView)/2.0) /m_dZoom);
+	// 	fTop   = fRight * float(dAspectRatio);		
+	// } else {
+	// 	fTop   = fNear * float(tan(DEG2RAD(m_dFieldOfView)/2.0) /m_dZoom);
+	// 	fRight = fTop / float(dAspectRatio);
+	// } 
 
-	glViewport(0,0,m_nWidth,m_nHeight);
+	// glViewport(0,0,m_nWidth,m_nHeight);
 
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glFrustum( -fTop, fTop, -fRight, fRight, fNear, 10*fFar);
+	// glMatrixMode(GL_PROJECTION);
+	// glLoadIdentity();
+	// glFrustum( -fTop, fTop, -fRight, fRight, fNear, 10*fFar);
 
-	CMatrix matModel = m_pCameraArcball->getRotatonMatrix().getInverse();
+	// CMatrix matModel = m_pCameraArcball->getRotatonMatrix().getInverse();
 
-	double matrix[16];
-	matModel.get(matrix[ 0], matrix[ 4], matrix[ 8], matrix[12],
-		matrix[ 1], matrix[ 5], matrix[ 9], matrix[13],
-		matrix[ 2], matrix[ 6], matrix[10], matrix[14],
-		matrix[ 3], matrix[ 7], matrix[11], matrix[15]);
+	// double matrix[16];
+	// matModel.get(matrix[ 0], matrix[ 4], matrix[ 8], matrix[12],
+	// 	matrix[ 1], matrix[ 5], matrix[ 9], matrix[13],
+	// 	matrix[ 2], matrix[ 6], matrix[10], matrix[14],
+	// 	matrix[ 3], matrix[ 7], matrix[11], matrix[15]);
 
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glTranslated(m_dTranslateX * m_dRadius/m_dZoom, m_dTranslateY*m_dRadius/m_dZoom, -m_dCenter);
-	glMultMatrixd(matrix);
-	glTranslated(m_vecCameraPosition[0], m_vecCameraPosition[1], m_vecCameraPosition[2]);
+	// glMatrixMode(GL_MODELVIEW);
+	// glLoadIdentity();
+	// glTranslated(m_dTranslateX * m_dRadius/m_dZoom, m_dTranslateY*m_dRadius/m_dZoom, -m_dCenter);
+	// glMultMatrixd(matrix);
+	// glTranslated(m_vecCameraPosition[0], m_vecCameraPosition[1], m_vecCameraPosition[2]);
 
-	glClear(GL_COLOR_BUFFER_BIT);
+	// glClear(GL_COLOR_BUFFER_BIT);
 	renderGeometry();
-    
-
 
 	glutSwapBuffers();
 }
@@ -543,7 +544,6 @@ void CGlutWindow::drawTransducer(){
 		transform[15] = 1.0;
 
 		if(firstIgnore > 1){
-
 			transducerX = (int)((m_datasetInfo.resWidth/2) + transform[12]*130);
 			
 			if((transducerX < m_datasetInfo.resWidth) && (transducerX > 0)){
@@ -555,8 +555,7 @@ void CGlutWindow::drawTransducer(){
 				rotxUltrasound = m_datasetInfo.resWidth - 1;
 			else
 				rotxUltrasound = 1;
-			}
-				
+			}		
 		}	
 		//rotx = temp.transform[9];
 		firstIgnore++;
@@ -635,7 +634,7 @@ void CGlutWindow::renderGeometry() {
 	
 	glPopMatrix();
 	glRotated(90,trx,0,0); //rotate volume
-	cgRenderGeometry();
+	//cgRenderGeometry();
 
 }
 

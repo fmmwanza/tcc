@@ -17,10 +17,9 @@ public:
 	~Core();
 	void run();
 	static void display(void);
-	static void displayUS(void);
-	static void reshapeUS(int width, int height);
+
 	static void idle(void);
-	static void idleUS(void);
+
 	static void reshape(int width, int height);
 	static void keyboard(unsigned char key, int x, int y);
 	static void mouse(int button, int state, int x, int y);
